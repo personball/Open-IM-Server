@@ -143,13 +143,26 @@ func MsgToUser(pushMsg *pbPush.PushMsgReq) {
 		if detailContent == "" {
 			detailContent = title
 		}
-		pushResult, err := offlinePusher.Push(UIDList, title, detailContent, pushMsg.OperationID, opts)
-		if err != nil {
-			promePkg.PromeInc(promePkg.MsgOfflinePushFailedCounter)
-			log.NewError(pushMsg.OperationID, "offline push error", pushMsg.String(), err.Error())
+		if pushMsg.MsgData.ContentType == constant.SignalingNotification {
+			go func() {
+				pushResult, err := offlinePusher.Push(UIDList, title, detailContent, pushMsg.OperationID, opts)
+				if err != nil {
+					promePkg.PromeInc(promePkg.MsgOfflinePushFailedCounter)
+					log.NewError(pushMsg.OperationID, "offline push error", pushMsg.String(), err.Error())
+				} else {
+					promePkg.PromeInc(promePkg.MsgOfflinePushSuccessCounter)
+					log.NewDebug(pushMsg.OperationID, "offline push return result is ", pushResult, pushMsg.MsgData)
+				}
+			}()
 		} else {
-			promePkg.PromeInc(promePkg.MsgOfflinePushSuccessCounter)
-			log.NewDebug(pushMsg.OperationID, "offline push return result is ", pushResult, pushMsg.MsgData)
+			pushResult, err := offlinePusher.Push(UIDList, title, detailContent, pushMsg.OperationID, opts)
+			if err != nil {
+				promePkg.PromeInc(promePkg.MsgOfflinePushFailedCounter)
+				log.NewError(pushMsg.OperationID, "offline push error", pushMsg.String(), err.Error())
+			} else {
+				promePkg.PromeInc(promePkg.MsgOfflinePushSuccessCounter)
+				log.NewDebug(pushMsg.OperationID, "offline push return result is ", pushResult, pushMsg.MsgData)
+			}
 		}
 	}
 }
@@ -266,14 +279,28 @@ func MsgToSuperGroupUser(pushMsg *pbPush.PushMsgReq) {
 				}
 				detailContent = title
 			}
-			pushResult, err := offlinePusher.Push(needOfflinePushUserIDList, title, detailContent, pushMsg.OperationID, opts)
-			if err != nil {
-				promePkg.PromeInc(promePkg.MsgOfflinePushFailedCounter)
-				log.NewError(pushMsg.OperationID, "offline push error", pushMsg.String(), err.Error())
+			if pushMsg.MsgData.ContentType == constant.SignalingNotification {
+				go func() {
+					pushResult, err := offlinePusher.Push(needOfflinePushUserIDList, title, detailContent, pushMsg.OperationID, opts)
+					if err != nil {
+						promePkg.PromeInc(promePkg.MsgOfflinePushFailedCounter)
+						log.NewError(pushMsg.OperationID, "offline push error", pushMsg.String(), err.Error())
+					} else {
+						promePkg.PromeInc(promePkg.MsgOfflinePushSuccessCounter)
+						log.NewDebug(pushMsg.OperationID, "offline push return result is ", pushResult, pushMsg.MsgData)
+					}
+				}()
 			} else {
-				promePkg.PromeInc(promePkg.MsgOfflinePushSuccessCounter)
-				log.NewDebug(pushMsg.OperationID, "offline push return result is ", pushResult, pushMsg.MsgData)
+				pushResult, err := offlinePusher.Push(needOfflinePushUserIDList, title, detailContent, pushMsg.OperationID, opts)
+				if err != nil {
+					promePkg.PromeInc(promePkg.MsgOfflinePushFailedCounter)
+					log.NewError(pushMsg.OperationID, "offline push error", pushMsg.String(), err.Error())
+				} else {
+					promePkg.PromeInc(promePkg.MsgOfflinePushSuccessCounter)
+					log.NewDebug(pushMsg.OperationID, "offline push return result is ", pushResult, pushMsg.MsgData)
+				}
 			}
+
 		}
 	}
 }

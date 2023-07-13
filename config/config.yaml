@@ -1,7 +1,3 @@
-#OpenIM config
-
-
-#---------------Infrastructure configuration---------------------#
 zookeeper:
   schema: openim                          #不建议修改
   address: [ 127.0.0.1:2181 ]             #
@@ -9,9 +5,9 @@ zookeeper:
   password:                               #密码
 
 mysql:
-  address: [ 127.0.0.1:13306 ]            #目前仅支持单机
+  address: [ 127.0.0.1:3306 ]            #目前仅支持单机
   username: root                          #用户名
-  password: openIM123                     #密码
+  password:                      #密码
   database: openIM_v3                     #不建议修改
   maxOpenConn: 1000                       #最大连接数
   maxIdleConn: 100                        #最大空闲连接数
@@ -28,7 +24,7 @@ mongo:
   maxPoolSize: 100
 
 redis:
-  address: [ 127.0.0.1:16379 ]            #
+  address: [ 127.0.0.1:6379 ]            #
   username:                               #only redis version 6.0+ need username
   password: openIM123                     #密码
 
@@ -244,4 +240,3 @@ prometheus: #prometheus每个服务的端口数量需要和rpcPort保持对应
   rtcPrometheusPort: [ 21300 ]
   thirdPrometheusPort: [ 21301 ]
   messageTransferPrometheusPort: [ 21400, 21401, 21402, 21403 ] #端口数量需要和script/path_info.cfg中的msg_transfer_service_num保持一致
-

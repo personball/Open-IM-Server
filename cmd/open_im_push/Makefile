@@ -1,4 +1,4 @@
-.PHONY: all build run gotool install clean help
+.PHONY: all build run gotool install clean help image-push
 
 NAME=open_im_push
 BIN_DIR=../../bin/
@@ -18,7 +18,7 @@ BINARY_NAME=${NAME}
 endif
 
 build:
-	CGO_ENABLED=0 GOOS=${OS} GOARCH=${ARCH} go build -ldflags="-w -s"
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s"
 
 run:
 	@go run ./
@@ -33,4 +33,7 @@ install:build
 clean:
 	@if [ -f ${BINARY_NAME} ] ; then rm ${BINARY_NAME} ; fi
 
+# 打包 open_im_push
+image-push:
+	docker build -t registry.cn-hangzhou.aliyuncs.com/vzero/docker.io.openim.push:v2.3.9-beta8 -f ./push.Dockerfile .
 

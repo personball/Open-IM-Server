@@ -114,6 +114,7 @@ type Notification struct {
 	ChannelID   string `json:"channel_id"`
 	ChannelName string `json:"channel_name"`
 	ClickType   string `json:"click_type"`
+	Intent      string `json:"intent,omitempty"`
 }
 
 type Options struct {
@@ -176,7 +177,16 @@ func (g *Getui) Push(userIDList []string, title, detailContent, operationID stri
 		ChannelID:   config.Config.Push.Getui.ChannelID,
 		ChannelName: config.Config.Push.Getui.ChannelName,
 	}}}
+
 	pushReq.setPushChannel(title, detailContent)
+
+	if opts.Data != "" {
+		pushReq.PushMessage.Notification.ClickType = "intent"
+		pushReq.PushMessage.Notification.Intent = opts.Data
+		pushReq.PushChannel.Android.Ups.Notification.ClickType = "intent"
+		pushReq.PushChannel.Android.Ups.Notification.Intent = opts.Data
+	}
+
 	pushResp := PushResp{}
 	if len(userIDList) > 1 {
 		taskID, err := g.GetTaskID(operationID, token, pushReq)

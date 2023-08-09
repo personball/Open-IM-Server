@@ -232,7 +232,7 @@ push:
     pushUrl: 
     masterSecret: ""
     appKey: ""
-    intent: ""
+    intent: "intent://com.zhejiang.udun/?#Intent;scheme=unipush;launchFlags=0x4000000;component=com.zhejiang.udun/io.dcloud.PandoraEntry;S.UP-OL-SU=true;"
     enable: # true or false (bool)
     channelID: ""
     channelName: ""

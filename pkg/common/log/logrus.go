@@ -70,11 +70,7 @@ func NewLfsHook(rotationTime time.Duration, maxRemainNum uint, moduleName string
 		logrus.InfoLevel:  initRotateLogs(rotationTime, maxRemainNum, "all", moduleName),
 		logrus.WarnLevel:  initRotateLogs(rotationTime, maxRemainNum, "all", moduleName),
 		logrus.ErrorLevel: initRotateLogs(rotationTime, maxRemainNum, "all", moduleName),
-	}, &nested.Formatter{
-		TimestampFormat: "2006-01-02 15:04:05.000",
-		HideKeys:        false,
-		FieldsOrder:     []string{"PID", "FilePath", "OperationID"},
-	})
+	}, &logrus.JSONFormatter{})
 	return lfsHook
 }
 func initRotateLogs(rotationTime time.Duration, maxRemainNum uint, level string, moduleName string) *rotatelogs.RotateLogs {
@@ -114,7 +110,7 @@ func Debug(OperationID string, args ...interface{}) {
 	}).Debugln(args)
 }
 
-//Deprecated
+// Deprecated
 func Warning(token, OperationID, format string, args ...interface{}) {
 	logger.WithFields(logrus.Fields{
 		"PID":         logger.Pid,
@@ -123,48 +119,48 @@ func Warning(token, OperationID, format string, args ...interface{}) {
 
 }
 
-//Deprecated
+// Deprecated
 func InfoByArgs(format string, args ...interface{}) {
 	logger.WithFields(logrus.Fields{}).Infof(format, args)
 }
 
-//Deprecated
+// Deprecated
 func ErrorByArgs(format string, args ...interface{}) {
 	logger.WithFields(logrus.Fields{}).Errorf(format, args...)
 }
 
-//Print log information in k, v format,
-//kv is best to appear in pairs. tipInfo is the log prompt information for printing,
-//and kv is the key and value for printing.
-//Deprecated
+// Print log information in k, v format,
+// kv is best to appear in pairs. tipInfo is the log prompt information for printing,
+// and kv is the key and value for printing.
+// Deprecated
 func InfoByKv(tipInfo, OperationID string, args ...interface{}) {
 	fields := make(logrus.Fields)
 	argsHandle(OperationID, fields, args)
 	logger.WithFields(fields).Info(tipInfo)
 }
 
-//Deprecated
+// Deprecated
 func ErrorByKv(tipInfo, OperationID string, args ...interface{}) {
 	fields := make(logrus.Fields)
 	argsHandle(OperationID, fields, args)
 	logger.WithFields(fields).Error(tipInfo)
 }
 
-//Deprecated
+// Deprecated
 func DebugByKv(tipInfo, OperationID string, args ...interface{}) {
 	fields := make(logrus.Fields)
 	argsHandle(OperationID, fields, args)
 	logger.WithFields(fields).Debug(tipInfo)
 }
 
-//Deprecated
+// Deprecated
 func WarnByKv(tipInfo, OperationID string, args ...interface{}) {
 	fields := make(logrus.Fields)
 	argsHandle(OperationID, fields, args)
 	logger.WithFields(fields).Warn(tipInfo)
 }
 
-//internal method
+// internal method
 func argsHandle(OperationID string, fields logrus.Fields, args []interface{}) {
 	for i := 0; i < len(args); i += 2 {
 		if i+1 < len(args) {

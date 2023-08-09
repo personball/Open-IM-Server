@@ -19,6 +19,7 @@ import (
 	pbRtc "Open_IM/pkg/proto/rtc"
 	"Open_IM/pkg/utils"
 	"context"
+	"fmt"
 	"strings"
 
 	promePkg "Open_IM/pkg/common/prometheus"
@@ -377,6 +378,11 @@ func GetOfflinePushOpts(pushMsg *pbPush.PushMsgReq) (opts push.PushOpts, err err
 		opts.IOSBadgeCount = pushMsg.MsgData.OfflinePushInfo.IOSBadgeCount
 		opts.IOSPushSound = pushMsg.MsgData.OfflinePushInfo.IOSPushSound
 		opts.Data = pushMsg.MsgData.OfflinePushInfo.Ex
+
+		if opts.Data == "" && pushMsg.MsgData.SessionType == constant.SuperGroupChatType {
+			intentPayload := fmt.Sprintf("{sessionType:%d,groupId:%s,clientMsgId:%s,contentType:%d}", pushMsg.MsgData.SessionType, pushMsg.MsgData.GroupID, pushMsg.MsgData.ClientMsgID, pushMsg.MsgData.ContentType)
+			opts.Data = config.Config.Push.Getui.Intent + fmt.Sprintf("S.title=%s;S.content=%s;S.payload=%s;end", pushMsg.MsgData.OfflinePushInfo.Title, pushMsg.MsgData.OfflinePushInfo.Desc, intentPayload)
+		}
 	}
 
 	return opts, nil

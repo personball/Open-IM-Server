@@ -35,5 +35,5 @@ clean:
 
 # 打包 open_im_push
 image-push:
-	docker build -t registry.cn-hangzhou.aliyuncs.com/vzero/docker.io.openim.push:v2.3.9-beta8 -f ./push.Dockerfile .
+	docker build -t registry.cn-hangzhou.aliyuncs.com/vzero/docker.io.openim.push:v2.3.9-beta13 -f ./push.Dockerfile .
 
